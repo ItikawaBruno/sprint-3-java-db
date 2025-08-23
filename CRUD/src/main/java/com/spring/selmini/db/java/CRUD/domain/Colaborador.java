@@ -3,6 +3,8 @@ package com.spring.selmini.db.java.CRUD.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -21,6 +23,9 @@ public class Colaborador {
     @ManyToOne
     @JoinColumn(name = "gestor_id")
     private Gestor gestor;
+
+    @OneToMany(mappedBy = "colaborador")
+    private List<Tarefa> tarefas;
 
 
     public Colaborador(String nome, String email, Gestor gestor) {

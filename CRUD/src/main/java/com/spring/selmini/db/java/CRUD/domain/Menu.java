@@ -4,7 +4,6 @@ import com.spring.selmini.db.java.CRUD.repository.ColaboradorRepository;
 import com.spring.selmini.db.java.CRUD.repository.GestorRepository;
 import com.spring.selmini.db.java.CRUD.repository.TarefaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -129,9 +128,10 @@ public class Menu {
         Optional<Colaborador> colaborador = colaboradorRepository.findByEmail(email);
         if (colaborador.isPresent()){
             Colaborador c = colaborador.get();
-            List<Tarefa> tarefas = tarefaRepository.findByIdColaborador(c.getId());
-            tarefas.stream().filter(t -> t.isAtivo()).toList();
-            tarefas.stream().forEach(System.out::println);
+            List<Tarefa> tarefas = tarefaRepository.findByColaborador(colaborador);
+            List<Tarefa> novasTarefas = tarefas.stream().filter(t -> t.isAtivo()).toList();
+            System.out.println(tarefas.size());
+            novasTarefas.forEach(System.out::println);
         }else {
             System.out.println("tarefas não encontradas");
         }
@@ -186,12 +186,14 @@ public class Menu {
         System.out.print("Digite a data de término: ");
         String dataTermino = e.next();
 
-        System.out.print("Digite o ID do colaborador: ");
-        Long idColaborador = e.nextLong();
+        System.out.print("Digite o email do colaborador: ");
+        String emailColaborador = e.next();
+
+        Colaborador colaborador = colaboradorRepository.findByEmail(emailColaborador).orElseThrow(() -> new RuntimeException("Deu erro na hora de procurar o o colaborador por email"));
 
         e.nextLine();
 
-        Tarefa tarefa = new Tarefa(titulo, descricao, dataInicio, dataTermino, g, idColaborador);
+        Tarefa tarefa = new Tarefa(titulo, descricao, dataInicio, dataTermino, g, colaborador);
         tarefaRepository.save(tarefa);
         System.out.println("tarefa foi salva");
         return "Tarefa foi salva";
