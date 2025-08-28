@@ -9,6 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CrudApplication implements CommandLineRunner {
 
+	//O Java está na versão 23
+
 	private final Menu menu;
 
 	@Autowired
